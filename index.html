@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Runner Game</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; background: #87CEEB; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800;
+        canvas.height = 400;
+
+        const gravity = 0.6;
+        const jumpPower = -10;
+        let obstacles = [];
+        const obstacleSpeed = -5;
+        const obstacleFrequency = 1500; // in milliseconds
+
+        const player = {
+            x: 50,
+            y: canvas.height - 100,
+            width: 50,
+            height: 50,
+            velocityY: 0,
+            jump() {
+                if (this.y === canvas.height - this.height) {
+                    this.velocityY = jumpPower;
+                }
+            },
+            update() {
+                this.velocityY += gravity;
+                this.y += this.velocityY;
+
+                if (this.y > canvas.height - this.height) {
+                    this.y = canvas.height - this.height;
+                    this.velocityY = 0;
+                }
+            },
+            draw() {
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        };
+
+        function createObstacle() {
+            const width = 50;
+            const height = Math.random() * 50 + 50;
+            const x = canvas.width;
+            obstacles.push({ x, y: canvas.height - height, width, height });
+        }
+
+        setInterval(createObstacle, obstacleFrequency);
+
+        function updateObstacles() {
+            for (const obs of obstacles) {
+                obs.x += obstacleSpeed;
+            }
+            obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'red';
+            for (const obs of obstacles) {
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            }
+        }
+
+        function detectCollision() {
+            for (const obs of obstacles) {
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            player.update();
+            updateObstacles();
+
+            if (detectCollision()) {
+                alert('Game Over!');
+                document.location.reload();
+            }
+
+            player.draw();
+            drawObstacles();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                player.jump();
+            }
+        });
+
+        gameLoop();
+    </script>
+<p>for a how to play guide, visit https://repositoryplumber.github.io/infirunner/howtoplay.txt</p>
+</body>
+</html>
