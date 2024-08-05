@@ -50,8 +50,8 @@
         };
 
         function createObstacle() {
-            const width = 50;
-            const height = Math.random() * 40 + 30; // Adjusted range for smaller obstacles
+            const width = 40; // Reduced width
+            const height = Math.random() * 30 + 20; // Adjusted range for smaller obstacles
             const x = canvas.width;
             obstacles.push({ x, y: canvas.height - height, width, height });
         }
@@ -111,7 +111,8 @@
 
         gameLoop();
     </script>
-<p>for a how to play guide, visit https://repositoryplumber.github.io/infirunner/howtoplay.txt</p>
+    <p>For a how-to-play guide, visit <a href="https://repositoryplumber.github.io/infirunner/howtoplay.txt">this link</a></p>
 </body>
 </html>
+
 
