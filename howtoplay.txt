@@ -1,0 +1,3 @@
+use the space bar to get the character over the red obstacles.
+the farther you make it, the better!
+by repositoryplumber :)
